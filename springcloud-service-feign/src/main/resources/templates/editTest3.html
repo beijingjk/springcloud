@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+
+    <script src="../layui/layui.js"></script>
+    <script src="../js/jquery-1.8.0.js"></script>
+</head>
+<body>
+<form class="layui-form" id="editPet">
+    <input type="hidden" name="ptid" th:value="${petType.ptid}"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label"> <span class="x-red">*</span>宠物名称 </label>
+        <div class="layui-input-inline">
+            <input type="text" id="description" name="ptname" th:value="${petType.ptname}"
+                   autocomplete="on" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label  class="layui-form-label"> <span class="x-red">*</span>请选择宠物品种 </label>
+        <div class="layui-input-inline" >
+            <select th:value="${petType.pttype}" name="pttype"  >
+                <option>=====选择品种=====</option>
+                <option th:selected="${petType.pttype=='犬科'}" value="犬科">犬科</option>
+                <option th:selected="${petType.pttype=='猫科'}" value="猫科">猫科</option>
+                <option th:selected="${petType.pttype=='两栖'}" value="两栖">两栖</option>
+                <option th:selected="${petType.pttype=='无脊椎'}" value="无脊椎">无脊椎</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" onclick="editPet()">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script src="../layui/lay/modules/form.js"></script>
+
+<script>
+
+    function editPet() {
+
+        $.ajax({
+            url:'/user/editPet',
+            dataType:'json',
+            type:'post',
+            data:$('#editPet').serialize(),
+            success:function(){
+                parent.reloadData();
+            }
+        })
+    }
+</script>
+
+</body>
+</html>
