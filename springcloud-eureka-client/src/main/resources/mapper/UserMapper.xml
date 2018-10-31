@@ -3,6 +3,132 @@
 
 <mapper namespace="com.jk.mapper.UserMapper">
 
+    <!-- 查询类型 -->
+    <select id="queryFruitsType" resultType="com.jk.model.FruitsType">
+        select * from t_fruits_type
+    </select>
+
+    <!-- 查询地址 -->
+    <select id="queryArea" resultType="com.jk.model.Area">
+        SELECT ta.* FROM t_area ta WHERE ta.parent IS NULL
+    </select>
+
+    <!-- 根据id查询单条数据 -->
+    <select id="queryAllFruitsById" resultType="com.jk.model.FruitsInfo">
+        select * from t_fruits_info  where id=#{id}
+    </select>
+
+    <!-- 修改商品 -->
+    <update id="editFruits">
+        update t_fruits_info set
+                  title=#{title},present=#{present},
+                  place=#{place},freight=#{freight},
+                  norms=#{norms},num=#{num},
+                  price=#{price},typeId=#{typeId}
+          where id=#{id}
+    </update>
+
+    <!--  商品表查询 -->
+    <select id="queryFruitsList" resultType="com.jk.model.FruitsInfo">
+      select ff.* , ft.typeName showtype from t_fruits_info ff
+		  LEFT JOIN t_fruits_type ft ON ff.typeId = ft.id
+			  limit #{start},#{pageSize}
+    </select>
+
+    <!--  商品表查询总数 -->
+    <select id="queryFruitsCount" resultType="long">
+      select count(*) from t_fruits_info ff
+		  LEFT JOIN t_fruits_type ft ON ff.typeId = ft.id
+    </select>
+
+    <!-- 新增商品 -->
+    <insert id="saveFruits">
+      insert into t_fruits_info (title,present,
+                  place,freight,
+                  norms,num,auditing,
+                  price,typeId)
+          values(#{title},#{present},
+                  #{place},#{freight},
+                  #{norms},#{num},#{auditing},
+                  #{price},#{typeId})
+   </insert>
+
+    <!-- 删除商品 -->
+    <delete id="delFruits">
+        delete  from t_fruits_info where id=#{id}
+    </delete>
+    <!-- 登录 -->
+    <select id="toUserInfo" resultType="com.jk.model.Login" >
+		select * from t_user where userName = #{userName}
+	</select>
+
+
+    <!--展示不同权限-->
+    <select id="getTreeMenu" resultType="com.jk.model.TreeMenu" parameterType="com.jk.model.Login" >
+        SELECT tt.* FROM user_role ur,role_tree rt,`t_menu` tt
+        WHERE ur.roleId = rt.roleId
+        AND rt.treeId = tt.`menuid`
+        AND tt.`pid` = #{pid}
+        AND ur.userId = #{userid}
+    </select>
+
+    <!--查询用户角色-->
+    <select id="getRoleResources" parameterType="com.jk.model.Login"  resultType="java.util.LinkedHashMap">
+   SELECT * FROM user_role ur,t_role tr,role_tree rt,`t_menu` tt WHERE
+     ur.roleid = tr.id AND tr.id = rt.roleid AND rt.`treeid` =tt.`menuid`
+     AND ur.userId =  #{user.userId}
+
+   </select>
+    <!--角色删除-->
+    <delete id="delRole">
+          delete  from t_role where id=#{id}
+    </delete>
+
+    <!--角色新增-->
+    <insert id="saveROle">
+        insert  into t_role (id,name,description,createtime)values(
+        #{id},
+        #{name},
+        #{description},
+        SYSDATE()
+        )
+    </insert>
+
+    <!--角色查看-->
+    <select id="queryRoleList" resultType="com.jk.model.Role">
+           select * from t_role  limit #{start},#{pageSize}
+    </select>
+
+    <select id="queryRoleCount" resultType="long">
+         select count(*) from t_role
+    </select>
+
+    <!--y用户新增-->
+    <insert id="saveUser">
+        insert  into t_user (userId,sincerityName,userPassword,userName,userSex,userStatus)values(
+        #{userId},
+        #{sincerityName},
+        #{userPassword},
+        #{userName},
+        #{userSex},
+        #{userStatus}
+        )
+    </insert>
+
+    <!--用户删除-->
+    <delete id="delUser">
+          delete  from t_user where userId=#{userId}
+    </delete>
+
+    <!--用户查询-->
+    <select id="queryUserList" resultType="com.jk.model.Login">
+           select * from t_user  limit #{start},#{pageSize}
+    </select>
+
+    <select id="queryUserCount" resultType="long">
+         select count(*) from t_user
+    </select>
+
 
 
     <select id="queryPetTypePage" resultType="com.jk.model.PetType">
