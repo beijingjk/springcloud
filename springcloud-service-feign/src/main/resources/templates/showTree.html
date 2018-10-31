@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+
+    <script src="../layui/layui.js"></script>
+    <script src="../js/jquery-1.8.0.js"></script>
+
+    <script type="text/javascript" src="../js/jquery-1.8.0.js"></script>
+
+    <link rel="stylesheet"  href="../js/uploadify/uploadify.css" type="text/css"/>
+    <link rel="stylesheet"  href="../js/EasyUI/themes/default/easyui.css" type="text/css"/>
+    <link rel="stylesheet"  href="../js/EasyUI/themes/icon.css" type="text/css"/>
+    <script type="text/javascript" src="../js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+
+    <form id="pwor_form">
+
+        <input type="hidden" th:value="${roleId }" name="roleId" id="roleId">t
+
+        <div id="pwoer_tree">
+
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block"><br/><br/><br/>
+                <button class="layui-btn" onclick="saveRoleTree()">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript" src="../js/EasyUI/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/EasyUI/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../js/EasyUI/util-js.js"></script>
+    <script type="text/javascript" src="../js/EasyUI/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="../js/uploadify/jquery.uploadify.min.js"></script>
+
+    <script type="text/javascript">
+
+        function saveRoleTree(){
+
+            var nodes = $('#pwoer_tree').tree('getChecked');
+            var ids="";
+            for (var i = 0; i < nodes.length; i++) {
+                ids+=","+nodes[i].id;
+            }
+            ids = ids.substring(1);
+            var roleId = $("#roleId").val();
+            $.ajax({
+                url:"/qx/addRoleTree",
+                type:"post",
+                data:{"ids":ids,"roleId":roleId},
+                dataType:"json",
+                success:function(a){
+                    if(a==1){
+                        alert('新增成功');
+                        location.reload();
+                    }else{
+                        alert('新增失败');
+                    }
+
+                },
+
+
+
+            })
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        $.ajax({
+            url:"/qx/queryRoleTree",
+            data:{"roleId":$("#roleId").val()},
+            type:"post",
+            dataType:"json",
+            success:function(data){
+                $("#pwoer_tree").tree({
+                    parentField:'pid',//实体类定义的pid一致
+                    method:"post",
+                    data:data,
+                    checkbox:true,
+                    name:""
+                })
+            },error:function(){
+                alert("查询失败");
+            }
+        })
+
+
+
+    </script>
+
+
+</body>
+</html>

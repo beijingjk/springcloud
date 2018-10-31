@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+
+    <script src="../layui/layui.js"></script>
+    <script src="../js/jquery-1.8.0.js"></script>
+    <link href="../js/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="../js/uploadify/jquery.uploadify.min.js"></script>
+
+</head>
+<body>
+<form class="layui-form" id="addUser">
+
+    <!--第一行-->
+    <div class="layui-form-item">
+        <!--1-->
+        <label class="layui-form-label"> <span class="x-red">*</span>真实姓名</label>
+        <div class="layui-input-inline">
+            <input type="text" id="name" name="sincerityName"
+                   autocomplete="on" class="layui-input">
+        </div>
+
+        <!--2-->
+        <label class="layui-form-label"> <span class="x-red">*</span>登录密码</label>
+        <div class="layui-input-inline">
+            <input type="text" id="payPasswork" name="userPassword"
+                   autocomplete="on" class="layui-input">
+        </div>
+
+    </div>
+
+    <!--第二行-->
+    <div class="layui-form-item">
+
+        <!--1-->
+        <label class="layui-form-label"> <span class="x-red">*</span>用户名称</label>
+        <div class="layui-input-inline">
+            <input type="text" id="username" name="userName"
+                   autocomplete="on" class="layui-input">
+        </div>
+
+        <!--2-->
+        <label class="layui-form-label"> <span class="x-red">*</span>用户性别</label>
+        <div class="layui-input-inline">
+            <input type="radio" id="sex1" name="userSex"
+                   autocomplete="on" class="layui-input" value="1">男
+            <input type="radio" id="sex2" name="userSex"
+                   autocomplete="on" class="layui-input" value="2">女
+        </div>
+
+
+    </div>
+
+    <!--第五行-->
+    <div class="layui-form-item">
+        <!--用户状态默认无会员-->
+        <div class="layui-input-inline">
+            <input type="hidden" id="vip" name="userStatus"
+                   autocomplete="on" class="layui-input" value="2">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" onclick="saveUsers()">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script src="../layui/lay/modules/form.js"></script>
+
+<script>
+    function saveUsers() {
+
+        $.ajax({
+            url:'/user/saveUser',
+            dataType:'json',
+            type:'post',
+            data:$('#addUser').serialize(),
+            success:function(){
+                parent.reloadData();
+            }
+        })
+    }
+
+    layui.use(['laydate', 'laypage', 'layer', 'table','form','element'], function() {
+        var laydate = layui.laydate //日期
+            , laypage = layui.laypage //分页
+            , table = layui.table //表格
+            , form = layui.form//表单
+            , element = layui.element//元素操作
+            , layer = layui.layer;//弹出层
+
+
+        //日期格式插件
+        lay('.test-item').each(function () {
+            laydate.render({
+                elem: this
+                , type: 'datetime'
+                , trigger: 'click'
+            });
+        });
+    })
+
+
+
+    //图片
+    $(function(){
+        //给文件域的id  一个上传方法
+        $("#imgFileBTN").uploadify({
+            //前台请求后台的url 不可忽略的参数
+            'uploader' :"../user/uploadRelPhoto",
+            //插件自带 不可忽略的参数
+            'swf' : '../js/uploadify/uploadify.swf',
+            //撤销按钮的图片路径
+            'cancelImg' : '../js/uploadify/uploadify-cancel.png"',
+            //如果为true 为自动上传 在文件后 为false 那么它就要我们自己手动点上传按钮
+            'auto' : true,
+            //可以同时选择多个文件 默认为true 不可忽略
+            'multi' : false,
+            //给上传按钮设置文字
+            'buttonText' : '选择图片',
+            //上传后队列是否消失
+            'removeCompleted' : true,
+            'removeTimeout' : 1,
+            //上传文件的个数
+            'uploadLimit' : 1,
+            'fileTypeExts' : '*.*',
+            'fileSizeLimit' : '200MB',
+            //给div的进度条加背景 不可忽略
+            'queueID' : 'showBars',
+            // controller层方法中接收文件的参数名
+            'fileObjName' : 'hero_Img',
+            //上传成功后的回调函数
+            'onUploadSuccess' : function(file, data, response) {
+                //data   上传到服务器的文件夹   加     图片名
+                $("#showImg").html('<img src="'+JSON.parse(data).name+'" style="width:100px;height:100px;border-radius:220px;"/>');
+                $("#userp").val(JSON.parse(data).name);
+            }
+        })
+    })
+
+</script>
+
+</body>
+</html>
