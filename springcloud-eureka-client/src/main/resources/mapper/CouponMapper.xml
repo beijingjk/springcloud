@@ -38,7 +38,20 @@
 
     <select id="queryAllCouponById" resultType="com.jk.model.Coupon">
     select * from t_coupon  where id=#{id}
-  </select>
+    </select>
+
+
+    <select id="queryAllOrderById" resultType="com.jk.model.Order">
+     select tbo.consign_time as consignTime,tbo.shipping_name as shippingName,
+     tbo.shipping_code as shippingCode,tbo.order_id as orderId
+     from tb_order tbo  where order_id = #{orderId}
+    </select>
+
+    <select id="queryTuikUAn" resultType="com.jk.model.Order">
+             select tbo.refundreason,tbo.refundyy,tbo.order_id as orderId
+     from tb_order tbo  where order_id = #{orderId}
+    </select>
+
 
     <insert id="saveCoupon">
               insert into t_coupon (id,faceValue,name,maxPrice,startDate,endDate,status,cnumber,ccount)
@@ -54,6 +67,103 @@
         ccount=#{ccount}
         where id=#{id}
     </update>
+
+
+    <update id="editOrder">
+        update tb_order set
+        consign_time=#{consignTime},
+        shipping_name=#{shippingName},
+        shipping_code=#{shippingCode},
+        status = 4
+
+        where order_id=#{orderId}
+    </update>
+
+    <update id="editOrder666">
+             update tb_order set
+             status = 8
+             where order_id=#{orderId}
+    </update>
+
+
+    <select id="queryOrderList" resultType="com.jk.model.Order">
+        select tbo.order_id as orderId,tbo.buyer_nick as buyerNick,tbo.create_time as createTime,
+         tbo.payment,tbo.status
+         from tb_order tbo
+         <where>
+             <if test="o.orderId != null">
+                 and order_id like '%${o.orderId}%'
+             </if>
+             <if test="o.buyerNick != null">
+                 and buyer_nick like '%${o.buyerNick}%'
+             </if>
+             <if test="o.sdqDate != null">
+                 and consign_time &gt; #{o.sdqDate}
+             </if>
+             <if test="o.edqDate != null">
+                 and consign_time &lt; #{o.edqDate}
+             </if>
+         </where>
+
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="queryOrderCount" resultType="long">
+        select count(*) from tb_order
+
+    </select>
+
+
+    <select id="getOrdersShow" resultType="com.jk.model.OrderItem">
+select
+toi.title,toi.price,toi.num,toi.total_fee as totalFee,
+
+tbo.shipping_name as shippingName,
+tbo.shipping_code as shippingCode,
+
+
+
+tos.receiver_name as receiverName,
+tos.receiver_mobile as receiverMobile,
+tos.receiver_state as receiverState,
+tos.receiver_city as receiverCity,
+tos.receiver_district as receiverDistrict,
+tos.receiver_address  as  receiverAddress
+
+
+
+from tb_order_item toi
+left join tb_order tbo on toi.order_id = tbo.order_id
+		left join tb_order_shipping tos on tbo.order_id = tos.order_id
+		left join t_user tu on tu.userId = tbo.user_id
+
+    </select>
+
+    <select id="getOrdersShow1" resultType="com.jk.model.Order">
+              select tbo.shipping_name as shippingName,
+tbo.shipping_code as shippingCode
+
+from tb_order tbo,t_user tu
+
+		where tu.userId = tbo.user_id
+    </select>
+
+
+    <select id="getOrdersShow2" resultType="com.jk.model.OrderShipping">
+             select
+tos.receiver_name as receiverName,
+tos.receiver_mobile as receiverMobile,
+tos.receiver_state as receiverState,
+tos.receiver_city as receiverCity,
+tos.receiver_district as receiverDistrict,
+tos.receiver_address as receiverAddress
+
+from tb_order_shipping tos,t_user tu,tb_order tbo
+
+		where
+tos.order_id= tbo.order_id and
+tbo.user_id=tu.userId
+    </select>
 
 
 
