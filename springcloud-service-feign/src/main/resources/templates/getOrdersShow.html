@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+
+    <script src="../layui/layui.js"></script>
+    <script src="../js/jquery-1.8.0.js"></script>
+</head>
+<body>
+
+<!-- 物流信息 -->
+<table border="1" align="center">
+
+        <tr style="background-color:greenyellow">
+            <td colspan="2" align="center" ><font>物流信息</font></td>
+
+        </tr>
+
+        <tr>
+            <td>物流名称</td>
+            <td align="center">物流单号</td>
+        </tr>
+
+
+
+    <tr th:each="o : ${order1}">
+        <td align="center" th:text="${o.shippingName}"></td>
+        <td th:text="${o.shippingCode}"></td>
+
+    </tr>
+
+</table>
+
+<br/>
+
+<table border="1" align="center">
+
+        <tr>
+             <td colspan="4" style="background-color:greenyellow">商品信息</td>
+        </tr>
+
+        <tr>
+             <td>商品名称</td>
+             <td>商品单价(元)</td>
+             <td>数量</td>
+             <td>总价</td>
+        </tr>
+
+        <tr th:each="o1 : ${orders}">
+            <td th:text="${o1.title}"></td>
+            <td th:text="${o1.price}"></td>
+            <td th:text="${o1.num}"></td>
+            <td th:text="${o1.totalFee}"></td>
+        </tr>
+
+</table>
+
+<br/>
+
+<table border="1" align="center">
+
+        <tr>
+             <td colspan="3" style="background-color:greenyellow">买家信息</td>
+        </tr>
+
+        <tr>
+            <td>买家姓名</td>
+            <td>联系方式</td>
+            <td>地址</td>
+        </tr>
+
+        <tr th:each="o2 : ${order2}">
+            <td th:text="${o2.receiverName}"></td>
+            <td th:text="${o2.receiverMobile}"></td>
+            <td>
+                <span th:text="${o2.receiverState}"></span>
+                <span th:text="${o2.receiverCity}"></span>
+                <span th:text="${o2.receiverDistrict}"></span>
+                <span th:text="${o2.receiverAddress}"></span>
+            </td>
+
+        </tr>
+
+
+</table>
+
+
+
+
+
+
+<!--<form class="layui-form" id="editOrder">
+    <input type="hidden" name="orderId" th:value="${order.orderId}"/>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"> <span class="x-red">*</span>发货时间 </label>
+        <div class="layui-input-inline">
+            <input type="text" id="d1" name="consignTime"
+                   th:value="${order.consignTime}"   autocomplete="on" class="layui-input">
+        </div>
+    </div>
+
+
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"> <span class="x-red">*</span>物流名称 </label>
+        <div class="layui-input-inline">
+            <input type="text" id="descriptions1" name="shippingName"
+                   th:value="${order.shippingName}"     autocomplete="on" class="layui-input">
+        </div>
+    </div>
+
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"> <span class="x-red">*</span>物流单号 </label>
+        <div class="layui-input-inline">
+            <input type="text" id="cc221" name="shippingCode"
+                   th:value="${order.shippingCode}"     autocomplete="on" class="layui-input">
+        </div>
+    </div>
+
+
+
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" onclick="editOrder()">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>-->
+<script src="../layui/lay/modules/form.js"></script>
+
+<script>
+
+    /*layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#d1' //指定元素
+        });
+
+    });
+
+
+    function editOrder() {
+
+        $.ajax({
+            url:'/yx/editOrder',
+            dataType:'json',
+            type:'post',
+            data:$('#editOrder').serialize(),
+            success:function(){
+                parent.reloadData();
+            }
+        })
+    }*/
+</script>
+
+</body>
+</html>
