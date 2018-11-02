@@ -4,10 +4,15 @@ server:
 spring:
   application:
     name: service-hi
+  data:
+    solr:
+      repositories:
+        enabled: true
+      zk-host: 127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183
   datasource:
     password: root
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/1802a?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://192.168.31.146:3306/1802a?useUnicode=true&characterEncoding=utf-8
     username: root
 
 eureka:

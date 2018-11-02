@@ -11,6 +11,7 @@
     <script type="text/javascript" src="../js/jquery-1.8.0.js"></script>
 </head>
 <body class="layui-layout-body">
+
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
         <div class="layui-logo">果鲜生后台</div>
@@ -20,19 +21,14 @@
             <li class="layui-nav-item"><a href="#">推广管理</a></li>
             <li class="layui-nav-item"><a href="#">基本设置</a></li>
         </ul>
+        <!--/*@thymesVar id="userName" type=""*/-->
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
+                <span>欢迎&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <!--span th:text="${user.userName}"></span>-->
                 <dl class="layui-nav-child">
-                    <dd>
-                        <a class="infoUpdate"><i class="layui-icon layui-icon-username" style="font-size: 15px; color: #000000;"></i>&nbsp;<cite>基本资料</cite></a>
-                    </dd>
-                    <dd>
-                        <a class="pwdUpdate"><i class="layui-icon layui-icon-auz" style="font-size: 15px; color: #000000;"></i>&nbsp;<cite>安全设置</cite></a>
-                    </dd>
+                    <dd><a href="javascript:;">退了</a></dd>
                 </dl>
-            </li>
-            <li class="layui-nav-item">
-                <a href="logout.jsp"  target="_top"><i class="iconfont icon-Icon_logout"></i><cite> 退出</cite></a>
             </li>
         </ul>
     </div>
@@ -63,6 +59,85 @@
 
         element.init();
     });
+
+
+      /* $.ajax({
+            url:"/user/getTreeMenu",
+            type:"post",
+            dataType:"json",
+            async:false,
+            success:function(data){
+                var is=data.length;
+                var ht="";
+                for(var i=0;i<is;i++){
+                    ht+='<li class="layui-nav-item">'
+                      if(data[i].href!=null&&data[i].href!=0)
+                    {
+                        ht+="<a href='"+data[i].href+"' target='ifre'>"+data[i].name+"</a>"
+                    }else {
+                        ht+="<a href='javascript:0;'>"+data[i].name+"</a>"
+                    }
+                    if(data[i].children!=null)
+                    {  var jsq=  data[i].children.length
+                        for(var j=0;j<jsq;j++) {
+                            ht+=" <dl class='layui-nav-child'><dd>"
+                            if(data[i].children[j].href!=null&&data[i].children[j].href!=0)
+                            {
+                                ht+='<a href="'+data[i].children[j].href+'" target="ifre" > '+data[i].children[j].name+' </a> ';
+
+                            }else {
+                                ht+='<a href="javascript:0;"> '+data[i].children[j].name+' </a> ';
+                            }
+                            if(data[i].children[j].children!=null)
+                            {
+                                var jk=  data[i].children[j].children.length;
+                                for (var k=0;k<jk;k++)
+                                {
+                                    ht+=" <dl class='layui-nav-child'><dd>"
+                                    if(data[i].children[j].children[k].href!=null&&data[i].children[j].children[k].href!=0)
+                                    {
+                                        ht+='<a href="'+data[i].children[j].children[k].href+'" target="ifre" > '+data[i].children[j].children[k].name+' </a> ';
+
+                                    }else {
+                                        ht+=' <a href="javascript:0;"> '+data[i].children[j].name+' </a>';
+                                    }
+                                    ht+="</dd></dl>";
+                                }
+                            }
+                            ht+="</dd></dl>";
+                        }
+                    }
+
+                    ht+=" </li>";
+                } ht+=' </ul>'
+                $("#menutrees").html(ht);
+            },
+            error:function(){
+                alert("查询出错");
+            }
+        });*/
+       /* function avo(url,text,id){
+
+            var $ = layui.jquery
+                ,element = layui.element;
+
+            var li = $("li[lay-id="+id+"]").length;
+
+            if(li>0){
+                element.tabChange('demo', id);
+            }else{
+                res1 = "<iframe src="+ url +" id='iframe-main"+ id +"' name='iframe-main"+ id +"' frameborder='0' height='99%' style='width:100%;height:99%'></iframe>";
+                element.tabAdd('demo', {
+                    title: text //用于演示
+                    ,content: res1
+                    ,id: id //实际使用一般是规定好的id，这里以时间戳模拟下
+                })
+
+                element.tabChange('demo', id);
+            }
+            element.init();
+        }*/
+
 
     $.ajax({
         url:"../user/queryTreeMenu",
@@ -119,27 +194,7 @@
             alert("查询出错");
         }
     });
-    function avo(url,title1,id){
 
-        var $ = layui.jquery
-            ,element = layui.element;
-
-        var li = $("li[lay-id="+id+"]").length;
-
-        if(li>0){
-            element.tabChange('demo', id);
-        }else{
-            res1 = "<iframe src="+ url +" id='iframe-main"+ id +"' name='iframe-main"+ id +"' frameborder='0' height='99%' style='width:100%;height:99%'></iframe>";
-            element.tabAdd('demo', {
-                title: title1 //用于演示
-                ,content: res1
-                ,id: id //实际使用一般是规定好的id，这里以时间戳模拟下
-            })
-
-            element.tabChange('demo', id);
-        }
-        element.init();
-    }
 </script>
 </body>
 </html>

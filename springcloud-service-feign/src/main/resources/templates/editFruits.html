@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+
+    <script src="../layui/layui.js"></script>
+    <script src="../js/jquery-1.8.0.js"></script>
+</head>
+<body>
+<form class="layui-form" id="editFruits">
+
+    <input type="hidden" name="id" th:value="${fruitsInfo.id}"/>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"> <span class="x-red">*</span>水果标题</label>
+        <div class="layui-input-inline">
+            <input type="text" id="title" name="title" th:value="${fruitsInfo.title}"
+                   autocomplete="on" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"> <span class="x-red">*</span>水果介绍</label>
+        <div class="layui-input-inline">
+            <input type="text" id="present" name="present" th:value="${fruitsInfo.present}"
+                   autocomplete="on" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"> <span class="x-red">*</span>水果产地</label>
+        <div class="layui-input-inline">
+            <select name="place" id="place" lay-verify="required">
+                <option th:selected="${arealist.id eq fruitsInfo.place}" th:each="arealist:${arealist}" th:value="${arealist.id}" th:text="${arealist.name}" ></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"> <span class="x-red">*</span>水果运费</label>
+        <div class="layui-input-inline">
+            <input type="text" id="freight" name="freight" th:value="${fruitsInfo.freight}"
+                   autocomplete="on" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"> <span class="x-red">*</span>水果规格</label>
+        <div class="layui-input-inline">
+            <input type="text" id="norms" name="norms" th:value="${fruitsInfo.norms}"
+                   autocomplete="on" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"> <span class="x-red">*</span>水果库存</label>
+        <div class="layui-input-inline">
+            <input type="text" id="num" name="num" th:value="${fruitsInfo.num}"
+                   autocomplete="on" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"> <span class="x-red">*</span>水果价格</label>
+        <div class="layui-input-inline">
+            <input type="text" id="price" name="price" th:value="${fruitsInfo.price}"
+                   autocomplete="on" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label  class="layui-form-label"><span class="x-red">*</span>水果类型</label>
+        <div class="layui-input-inline" >
+            <select id="type" name="typeId" lay-verify="required">
+                <option th:selected="${typelist.id eq fruitsInfo.typeId}" th:each="typelist:${typelist}" th:value="${typelist.id}" th:text="${typelist.typeName}" ></option>
+            </select>
+        </div>
+    </div>
+</form>
+
+<script src="../layui/lay/modules/form.js"></script>
+
+<script>
+
+    var table,form,element,layedit,layer,laydate;
+    $(function() {
+        layui.use(['table','form', 'element', 'layedit','layer','laydate'], function(){
+            table= layui.table;
+            form = layui.form;
+            element= layui.element;
+            layer = layui.layer
+            layedit = layui.layedit
+            laydate = layui.laydate;
+
+            //selectRoleName();    // 调用查询方法
+            findDepartment();
+        })
+    })
+
+    $(function(){
+        layui.use('form', function(){
+            var form = layui.form;
+            $.ajax({
+                url:'/fruits/queryArea',
+                type:'post',
+                data:{},
+                success:function(result){
+                    //console.info(result);
+                    var html = "";
+                    result.forEach(function(i){
+                        html += "<option value='"+i.id+"'>"+i.name+"</option>";
+                    })
+                    // console.info(html);
+                    $("#place").append(html);
+                    form.render('select');
+                }
+            })
+        });
+    })
+
+    function findDepartment() {
+        $.ajax({
+            url:'/fruits/queryFruitsType',
+            type:'post',
+            data:{},
+            dataType:'json',
+            success:function(result){
+                var role = document.getElementById("type");    //add_role_name给select定义的id
+                for(var i=0;i<result.length;i++){
+                    var option = document.createElement("option");    // 创建添加option属性
+                    option.setAttribute("value",result[i].id);     // 给option的value添加值
+                    option.innerText=result[i].typeName;       // 打印option对应的纯文本 （超级管理员、管理员）
+                    role.appendChild(option);        // 给select 添加option子标签
+                    form.render("select");            // 刷新select，显示出数据
+                }
+            },
+            error:function(){
+                alert("类型信息加载失败！");
+            }
+        })
+    }
+</script>
+</body>
+</html>

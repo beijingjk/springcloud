@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:c="">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+
+    <script src="../layui/layui.js"></script>
+    <script src="../js/jquery-1.8.0.js"></script>
+</head>
+<body>
+<form class="layui-form" id="addFruits">
+    <table align="center">
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"> <span class="x-red">*</span>水果标题</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="title" name="title"
+                               autocomplete="on" class="layui-input">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"> <span class="x-red">*</span>水果介绍</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="present" name="present"
+                               autocomplete="on" class="layui-input">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"> <span class="x-red">*</span>水果产地</label>
+                    <div class="layui-input-inline">
+                        <select name="place" id="place" lay-verify="required">
+                                  
+                          </select>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"> <span class="x-red">*</span>水果运费</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="freight" name="freight"
+                               autocomplete="on" class="layui-input">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"> <span class="x-red">*</span>水果规格</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="norms" name="norms"
+                               autocomplete="on" class="layui-input">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="test2">图片上传</button>
+                        <!--返回div-->
+                        <div class="layui-upload-list" id="img1"></div>
+                        <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;width: 420px">
+                            预览图：
+                            <div class="layui-upload-list" id="demo2"></div>
+                        </blockquote>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"> <span class="x-red">*</span>水果库存</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="num" name="num"
+                               autocomplete="on" class="layui-input">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"> <span class="x-red">*</span>水果价格</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="price" name="price"
+                               autocomplete="on" class="layui-input">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label  class="layui-form-label"><span class="x-red">*</span>水果类型</label>
+                    <div class="layui-input-inline" >
+                        <select id="type" name="typeId" lay-verify="required">
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" >
+                        <input type="hidden" id="auditing" value="1" name="auditing"
+                               autocomplete="on" class="layui-input">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" onclick="savePet()">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<script src="../layui/lay/modules/form.js"></script>
+
+<script>
+    layui.use('upload', function(){
+        var $ = layui.jquery
+            ,upload = layui.upload;
+        //多图片上传
+        upload.render({
+            elem: '#test2'
+            ,url: '../fruits/upload'
+            , field: "imgFile"
+            //上传文件的个数
+            ,number : 4
+            ,multiple: true
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#demo2').append('<img width="100px" height="100px" src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img">')
+                });
+                console.info(obj)
+            }
+            ,done: function(res){
+                $("#img1").append("<input type='hidden' name='imgs' value='"+res.route+"'/>")
+            }
+        });
+    });
+</script>
+<script>
+    var table,form,element,layedit,layer,laydate;
+    $(function() {
+        layui.use(['table','form', 'element', 'layedit','layer','laydate'], function(){
+            table= layui.table;
+            form = layui.form;
+            element= layui.element;
+            layer = layui.layer
+            layedit = layui.layedit
+            laydate = layui.laydate;
+
+            //selectRoleName();    // 调用查询方法
+            findDepartment();
+            aa();
+        })
+    })
+
+    function findDepartment() {
+        $.ajax({
+            url:'/fruits/queryFruitsType',
+            type:'post',
+            data:{},
+            dataType:'json',
+            success:function(result){
+                var role = document.getElementById("type");    //add_role_name给select定义的id
+                for(var i=0;i<result.length;i++){
+                    var option = document.createElement("option");    // 创建添加option属性
+                    option.setAttribute("value",result[i].id);     // 给option的value添加值
+                    option.innerText=result[i].typeName;       // 打印option对应的纯文本 （超级管理员、管理员）
+                    role.appendChild(option);        // 给select 添加option子标签
+                    form.render("select");            // 刷新select，显示出数据
+                }
+            },
+            error:function(){
+                alert("类型信息加载失败！");
+            }
+        })
+    }
+
+    $(function(){
+        layui.use('form', function(){
+            var form = layui.form;
+            $.ajax({
+                url:'/fruits/queryArea',
+                type:'post',
+                data:{},
+                success:function(result){
+                    //console.info(result);
+                    var html = "";
+                    result.forEach(function(result){
+                        html += "<option value='"+result.id+"'>"+result.name+"</option>";
+                    })
+                    // console.info(html);
+                    $("#place").append(html);
+                    form.render('select');
+                }
+            })
+        });
+    })
+
+    function savePet() {
+        $.ajax({
+            url:'/fruits/saveFruits',
+            dataType:'json',
+            type:'post',
+            data:$('#addFruits').serialize(),
+            success:function(result){
+                if(result==1){
+                    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                    parent.layer.close(index);  // 关闭layer
+                    parent.location.reload();
+                }
+                /*var index = parent.layer.getFrameIndex(window.name);
+                setTimeout(function(){parent.layer.close(index)}, 1000);*/
+                //window.parent.location.replace(location.href)
+            }
+        })
+    }
+</script>
+</body>
+</html>

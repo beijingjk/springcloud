@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>果鲜生后台登陆页面</title>
+
+    <link href="/login/css/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/login/js/jquery-1.8.3.min.js"></script>
+    <link rel="stylesheet" href="/login/EasyUI/themes/icon.css"/>
+    <link rel="stylesheet" href="/login/EasyUI/themes/default/easyui.css"/>
+    <link rel="stylesheet" href="/login/EasyUI/themes/color.css"/>
+    <script src="/login/EasyUI/jquery.min.js"></script>
+    <script src="/login/EasyUI/jquery.easyui.min.js"></script>
+    <script src="/login/EasyUI/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/login/EasyUI/util-js.js"></script>
+
+</head>
+<body onLoad="sendRequest()" >
+
+<div class="videozz"></div>
+<video  autoplay muted loop poster="/login/images/fallba1ck.jpg">
+    <source src="/login/images/mov.mp4">
+    你的游览器不支持video支持
+</video>
+
+<div class="box">
+    <div class="box-a">
+        <div class="m-2">
+            <div class="m-2-1">
+                <form action="#" method="post">
+                    <div class="m-2-2">
+                        <input type="text" id="userName" name="userName" placeholder="请输入账号" />
+                    </div>
+                    <div class="m-2-2">
+                        <input type="password" id="userPassword" name="userPassword" placeholder="请输入密码"/>
+                    </div>
+                    <div class="m-2-2 inputs">
+<!--
+                        <input type="button" id="loginBtn" onclick="check_login()" value="登   录"/>
+-->
+                        <a class="m-2-2 inputs"
+                           role="button"
+                           onclick="loginButton()"
+                           >登陆</a>
+                    </div>
+
+
+
+                </form>
+            </div>
+        </div>
+        <div class="m-5">
+            <div id="m-5-id-1">
+                <div id="m-5-2">
+                    <div id="m-5-id-2">
+                    </div>
+                    <div id="m-5-id-3"></div>
+                </div>
+            </div>
+        </div>
+        <div class="m-10"></div>
+        <div class="m-xz7"></div>
+        <div class="m-xz8 xzleft"></div>
+        <div class="m-xz9"></div>
+        <div class="m-xz9-1"></div>
+        <!-- <div class="m-x10"></div>
+        <div class="m-x11"></div>
+        <div class="m-x12 xzleft"></div>
+        <div class="m-x13"></div>
+        <div class="m-x14 xzleft"></div>
+        <div class="m-x15"></div>
+        <div class="m-x16 xzleft"></div>-->
+        <div class="m-x17 xzleft"></div>
+        <div class="m-x18"></div>
+        <div class="m-x19 xzleft"></div>
+        <div class="m-x20"></div>
+        <div class="m-8"></div>
+        <div class="m-9"><div class="masked1" id="sx8">果鲜生后台数据管理平台</div></div>
+        <div class="m-11">
+            <div class="m-k-1"><div class="t1"></div></div>
+            <div class="m-k-2"><div class="t2"></div></div>
+            <div class="m-k-3"><div class="t3"></div></div>
+            <div class="m-k-4"><div class="t4"></div></div>
+            <div class="m-k-5"><div class="t5"></div></div>
+            <div class="m-k-6"><div class="t6"></div></div>
+            <div class="m-k-7"><div class="t7"></div></div>
+        </div>
+        <div class="m-14"><div class="ss"></div></div>
+        <div class="m-15-a">
+            <div class="m-15-k">
+                <div class="m-15xz1">
+                    <div class="m-15-dd2"></div>
+                </div>
+            </div>
+        </div>
+        <div class="m-16"></div>
+        <div class="m-17"></div>
+        <div class="m-18 xzleft"></div>
+        <div class="m-19"></div>
+        <div class="m-20 xzleft"></div>
+        <div class="m-21"></div>
+        <div class="m-22"></div>
+        <div class="m-23 xzleft"></div>
+        <div class="m-24" id="localtime"></div>
+    </div>
+</div>
+<script src="/login/js/common.min.js"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    function loginButton(){
+        var userName = $("#userName").val();
+        var userPassword = $("#userPassword").val();
+
+        var userBean={
+            'userName':userName,
+            'userPassword':userPassword
+        }
+        if(userName!=null & userName!=''){
+            if(userPassword!= null & userPassword != ''){
+                $.ajax({
+                    url:"/login/loginMethods",
+                    type:"post",
+                    data:userBean,
+                    dataType:"json",
+                    success:function(result){
+
+                        if( result.code == 0){
+                            location.href = "/user/toTest   ";
+                        }if( result.code == 2){
+                            alert("账号不存在");
+                        }
+                        if( result.code == 3){
+                            alert("密码错误");
+                        }
+
+                    },
+                    error:function(){
+                        alert("服务器正忙，请稍后重试！");
+                    }
+                });
+            }
+        }
+
+    }
+    /*]]>*/
+</script>
+
+<script type="text/javascript">
+
+
+
+
+    $('#FastLoginBtn').click(function(){
+        window.location.href="toFastLogin"
+    })
+
+    //回车事件
+    $(document).keydown(function(event){
+        if(event.keyCode==13){            //ps：13这个数字就代表的是回车按键
+            $("#loginBtn").click();            //    ps：用的id选择器,如果按下回车按键的话就调用这个方法
+        }
+    });
+
+</script>
+
+</body>
+</html>

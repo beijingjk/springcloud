@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>广告管理</title>
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+
+</head>
+<body>
+
+<table class="layui-hide" id="demo" lay-filter="test"></table>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail" >新增</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<div class="layui-tab-item">
+    <div id="pageDemo"></div>
+</div>
+<script src="/layui/layui.js"></script>
+<script src="/layui/lay/modules/laypage.js"></script>
+<script src="/js/jquery-1.8.0.js"></script>
+
+<script>
+
+    layui.use(['form','layedit','laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function(){
+        var form = layui.form
+            ,laydate = layui.laydate //日期
+            ,laypage = layui.laypage //分页
+            ,layer = layui.layer //弹层
+            ,table = layui.table //表格
+            ,carousel = layui.carousel //轮播
+            ,upload = layui.upload //上传
+            ,element = layui.element //元素操作
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate
+
+
+        //第一个实例
+        table.render({
+            elem: '#demo'
+            ,height: 500
+            ,url: '/fruits/queryFruitsPage' //数据接口
+            ,method:'post'
+            ,id:'testReload'
+            ,page: true //开启分页
+            ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            ,toolbar: 'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+            ,totalRow: true //开启合计行
+            ,cols: [
+                [ //表头
+                    {field:'id', title: '水果序号', align:'center'}
+                    ,{field:'title', title: '水果标题',align:'center'}
+                    ,{field:'present', title: '水果介绍',align:'center'}
+                    ,{field:'placeName', title: '水果产地',align:'center'}
+                    ,{field:'freight', title: '水果运费',align:'center'}
+                    ,{field:'norms', title: '水果规格',align:'center'}
+                    ,{field:'num', title: '水果库存',align:'center'}
+                    ,{field:'price', title: '水果价格',align:'center'}
+                    ,{field:'showtype', title: '水果类型',align:'center'}
+                    ,{field:'auditing', title: '是否审核',align:'center'}
+                    ,{field:'reason', title: '不通过原因', align:'center'}
+                    ,{fixed: 'right',title: '操作', width: 200, align:'center', toolbar: '#barDemo'}
+                ]
+            ]
+            ,done:function(res, curr, count) {    //res 接口返回的信息
+                $("[data-field = 'auditing']").children().each(function () {
+                    if ($(this).text() == 1) {
+                        $(this).text("未审核");
+                    } else if ($(this).text() == 2) {
+                        $(this).text("审核通过");
+                    }else if ($(this).text() == 2) {
+                        $(this).text("审核不通过");
+                    }
+                })
+            }
+        });
+        //分页
+        laypage.render({
+            elem:'pageDemo'
+            ,count:'count'
+            ,curr:'page'
+            ,limit:'limit'
+            ,layout: ['prev', 'page', 'next', 'skip','count','limit']
+            ,jump:function (obj,first) {
+                if(!first){
+                    curnum = obj.curr;
+                    limitcount = obj.limit;
+
+                    productsearch(productGroupId,curnum,limitcount);
+                }
+            }
+        })
+
+
+    });
+
+
+    layui.use('table', function(){
+        var table = layui.table;
+        //监听表格复选框选择
+        table.on('checkbox(demo)', function(obj){
+            console.log(obj)
+        });
+        //监听工具条
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            var imgid = data.id;
+            if(obj.event === 'detail'){
+                var mylay = layer.open({
+                    type: 2,
+                    title: '新增',
+                    shadeClose: false, //点击遮罩关闭
+                    shade: 0.8,
+                    area: ['630px', '500px'],
+                    maxmin: true,
+                    closeBtn: 1,
+                    content: ['/fruits/toAddFruits', 'yes'], //iframe的url，yes是否有滚动条
+                });
+            }else if(obj.event === 'del'){
+                layer.confirm('确定删除数据吗？', function(index){
+                    obj.del();
+                    $.ajax({
+                        url:'/fruits/delFruits',
+                        data:{
+                            id:imgid,
+                        },
+                        dataType:'json',
+                        type:'post',
+                        success:function(){
+                            layer.close(index);
+                        }
+                    })
+                });
+            }else if(obj.event === 'edit'){/!*'编辑行：<br>'+ JSON.stringify(data)*!/
+                layer.open({
+                    type: 2,
+                    title: '修改',
+                    shadeClose: false, //点击遮罩关闭
+                    shade: 0.8,
+                    area: ['630px', '500px'],
+                    btn:['确认','取消'],
+                    maxmin: true,
+                    closeBtn: 1,
+                    content: ['../fruits/queryAllFruitsById?fruid='+imgid, 'yes'], //iframe的url，yes是否有滚动条
+                    yes: function(index, layero){
+                        var ibody = layer.getChildFrame('body', index);//获取iframe页面body
+                        var form = ibody.find('#editFruits');
+                        var postData = form.serialize();
+                        $.ajax({
+                            url:'../fruits/editFruits',
+                            dataType:'json',
+                            type:'post',
+                            data:postData,
+                            success: function(data){
+                                if(data){
+                                    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                                    parent.layer.close(index);  // 关闭layer
+                                    //window.location.reload();
+                                    //parent.location.reload();
+                                    window.parent.location.reload();
+                                    /*table.reload('testReload', {
+                                        where: {
+                                            title: title
+                                        }
+                                    });*/
+                                }
+                            }
+                        })
+                    },
+                    end : function(){
+                        window.location.reload();
+                    }
+                });
+            }
+
+
+        })
+
+    });
+
+    function reloadData(){
+        location.reload();
+    }
+
+</script>
+
+</body>
+</html>

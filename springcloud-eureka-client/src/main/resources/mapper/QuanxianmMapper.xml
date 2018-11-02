@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.mapper.QuanxianMapper" >
+
+	<insert id="addRoleTree" parameterType="java.util.List">
+		insert into role_tree  values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.roleId},#{item.treeId})
+		</foreach>
+	</insert>
+
+	<delete id="deleteRoleTree" parameterType="string">
+    	  delete from role_tree where roleid = #{roleId}
+  	</delete>
+
+
+	<select id="queryTree" resultType="com.jk.model.TreeMenu">
+    	select menuid id, name text ,pid,href url from t_menu
+ 	 </select>
+
+
+    <select id="queryRoleTree" resultType="com.jk.model.TreeMenu">
+    	SELECT * FROM role_tree rt ,t_menu tt WHERE rt.treeid = tt.`menuid` AND rt.roleid=#{roleId}
+ 	 </select>
+
+</mapper>
